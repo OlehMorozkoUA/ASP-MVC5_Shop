@@ -1,0 +1,281 @@
+﻿@{
+    ViewBag.Title = "Admin";
+}
+
+<ul class="nav nav-tabs" id="myTab" role="tablist" style="margin-top:50px;">
+    <li class="nav-item active">
+        <a class="nav-link" id="home-tab" data-toggle="tab" href="#products" role="tab" aria-controls="products" aria-selected="true">Products</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#catalogs" role="tab" aria-controls="catalogs" aria-selected="false">Catalogs</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="contact-tab" data-toggle="tab" href="#orders" role="tab" aria-controls="orders" aria-selected="false">Orders</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="contact-tab" data-toggle="tab" href="#users" role="tab" aria-controls="users" aria-selected="false">Users</a>
+    </li>
+</ul>
+
+<div class="tab-content" id="myTabContent">
+    <div class="tab-pane active" id="products" role="tabpanel" aria-labelledby="products-tab">
+        <!--////////////////////////////////////////////---------Seach Panel----------//////////////////////////////////////////////////-->
+        @using (Html.BeginForm("Find", "Home", FormMethod.Post, new { @class = "color-form", @style = "background-color:aquamarine; margin: 20px 0px; box-shadow: 0 0 25px rgba(0,0,0,0.8); padding: 10px;" }))
+        {
+            <input name="CatalogId" type="hidden" value="@ViewBag.catalogId" />
+            <input name="otherId" type="hidden" value="@ViewBag.id" />
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-5">
+                        <div class="form-group">
+                            <label>Product Brand</label>
+                            @Html.TextBox("Brand", null, new { @class = "form-control", @placeholder = "Enter Brand" })
+                        </div>
+                        <div class="form-group">
+                            <label>Product Name</label>
+                            @Html.TextBox("Name", null, new { @class = "form-control", @placeholder = "Enter Model" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-1">
+                        <input type="submit" value="submit" class="btn btn-primary" />
+                    </div>
+                </div>
+            </div>
+        }
+        <!--////////////////////////////////////////////---------Seach Panel----------//////////////////////////////////////////////////-->
+        <button class="btn btn-success pull-right" style="margin:20px;" id="add">Add</button>
+        <table class="table text-center" style="background-color:white;">
+            <thead style="background-color: black; color:white;">
+                <tr>
+                    <th class="text-center">Id</th>
+                    <th class="text-center">Brand</th>
+                    <th class="text-center">Name</th>
+                    <th class="text-center">Price</th>
+                    <th class="text-center">Image</th>
+                    <th class="text-center">Description</th>
+                    <th class="text-center">FullDescription</th>
+                    <th class="text-center">CatalogId</th>
+                    <th class="text-center">SubCatalogId</th>
+                    <th class="text-center">SubSubCatalogId</th>
+                    <th class="text-center">Delete</th>
+                    <th class="text-center">Update</th>
+                    <th class="text-center">Detail</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var product in ViewBag.Products)
+                {
+                    <tr>
+                        <td>@product.Id</td>
+                        <td>@product.Brand</td>
+                        <td>@product.Name</td>
+                        <td>@product.Price</td>
+                        <td>
+                            <img src="@product.ImagePath" width="50" />
+                        </td>
+                        <td class="text-justify">@product.Description</td>
+                        <td class="text-justify">
+                            @product.FullDescription
+                        </td>
+                        <td>@product.CatalogId</td>
+                        <td>@product.SubCatalogId</td>
+                        <td>@product.SubSubCatalogId</td>
+                        <td>
+                            <button class="btn btn-danger" id="delete_@product.Id" name="delete">Delete</button>
+                        </td>
+                        <td>
+                            <button class="btn btn-primary" id="update_@product.Id" name="update">Update</button>
+                        </td>
+                        <td>
+                            <button class="btn btn-info" id="detail_@product.Id" name="detail">Detail</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    @using KvartsShop.Areas.Admin.Models;
+    @using KvartsShop.Models;
+    @using KvartsShop.Models.Context;
+    @{
+        DataContext context = new DataContext();
+        IEnumerable<Catalog> Catalogs = context.Catalogs;
+        IEnumerable<SubCatalog> SubCatalogs = context.SubCatalogs;
+        IEnumerable<SubSubCatalog> SubSubCatalogs = context.SubSubCatalogs;
+    }
+    <div class="tab-pane" id="catalogs" role="tabpanel" aria-labelledby="catalogs-tab">
+        <button class="btn btn-success pull-right" id="create_catalog">Create</button>
+        <table class="table text-center" style="background-color:white;">
+            <thead style="background-color: black; color:white;">
+                <tr>
+                    <th class="text-center">Id</th>
+                    <th class="text-center">Name</th>
+                    <th class="text-center">ImagePath</th>
+                    <th class="text-center">Delete</th>
+                    <th class="text-center">Update</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var catalog in Catalogs)
+                {
+                    <tr>
+                        <td>@catalog.Id</td>
+                        <td>@catalog.Name</td>
+                        <td>
+                            <img src="@catalog.ImagePath" width="30" />
+                        </td>
+                        <td>
+                            <button class="btn btn-danger" name="catalog_delete" id="catalog_delete_@catalog.Id">Delete</button>
+                        </td>
+                        <td>
+                            <button class="btn btn-warning">Update</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <button class="btn btn-success pull-right" id="create_subcatalog">Create</button>
+
+        <table class="table text-center" style="background-color:white;">
+            <thead style="background-color: black; color:white;">
+                <tr>
+                    <th class="text-center">Id</th>
+                    <th class="text-center">Name</th>
+                    <th class="text-center">ImagePath</th>
+                    <th class="text-center">CatalogId</th>
+                    <th class="text-center">Delete</th>
+                    <th class="text-center">Update</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var subcatalog in SubCatalogs)
+                {
+                    <tr>
+                        <td>@subcatalog.Id</td>
+                        <td>@subcatalog.Name</td>
+                        <td>
+                            <img src="@subcatalog.ImagePath" width="30" />
+                        </td>
+                        <td>@subcatalog.CatalogId</td>
+                        <td>
+                            <button class="btn btn-danger" name="subcatalog_delete" id="subcatalog_delete_@subcatalog.Id">Delete</button>
+                        </td>
+                        <td>
+                            <button class="btn btn-warning">Update</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <button class="btn btn-success pull-right" id="create_subsubcatalog">Create</button>
+
+        <table class="table text-center" style="background-color:white;">
+            <thead style="background-color: black; color:white;">
+                <tr>
+                    <th class="text-center">Id</th>
+                    <th class="text-center">Name</th>
+                    <th class="text-center">ImagePath</th>
+                    <th class="text-center">CatalogId</th>
+                    <th class="text-center">SubCatalogId</th>
+                    <th class="text-center">Delete</th>
+                    <th class="text-center">Update</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var subsubcatalog in SubSubCatalogs)
+                {
+                    <tr>
+                        <td>@subsubcatalog.Id</td>
+                        <td>@subsubcatalog.Name</td>
+                        <td>
+                            <img src="@subsubcatalog.ImagePath" width="30" />
+                        </td>
+                        <td>@subsubcatalog.CatalogId</td>
+                        <td>@subsubcatalog.SubCatalogId</td>
+                        <td>
+                            <button class="btn btn-danger" name="subsubcatalog_delete" id="subsubcatalog_delete_@subsubcatalog.Id">Delete</button>
+                        </td>
+                        <td>
+                            <button class="btn btn-warning">Update</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="tab-pane" id="orders" role="tabpanel" aria-labelledby="orders-tab">
+        Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi qui.
+    </div>
+    <div class="tab-pane" id="users" role="tabpanel" aria-labelledby="users-tab">
+        Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi qui.
+    </div>
+</div>
+
+<script>
+    window.onload = () => {
+        var add = document.getElementById("add");
+        var dels = document.getElementsByName("delete");
+        var upds = document.getElementsByName("update");
+        var dets = document.getElementsByName("detail");
+
+
+        add.onclick = () => {
+            location.href = "/Admin/Home/Add";
+        }
+
+        for (var del of dels) {
+            del.onclick = (e) => {
+                location.href = "/Admin/Home/Del/" + e.target.id.replace("delete_", "");
+            }
+        }
+        for (var upd of upds) {
+            upd.onclick = (e) => {
+                location.href = "/Admin/Home/Upd/" + e.target.id.replace("update_", "");
+            }
+        }
+        for (var det of dets) {
+            det.onclick = (e) => {
+                location.href = "/Admin/Home/Det/" + e.target.id.replace("detail_", "");
+            }
+        }
+
+        let catalog_deletes = document.getElementsByName("catalog_delete");
+        let subcatalog_deletes = document.getElementsByName("subcatalog_delete");
+        let subsubcatalog_deletes = document.getElementsByName("subsubcatalog_delete");
+        let create_catalog = document.getElementById("create_catalog");
+        let create_subcatalog = document.getElementById("create_subcatalog");
+        let create_subsubcatalog = document.getElementById("create_subsubcatalog");
+
+        for (var catalog_delete of catalog_deletes) {
+            catalog_delete.onclick = (e) => {
+                location.href = "/Admin/Catalog/Del/" + e.target.id.replace("catalog_delete_", "");
+            }
+        }
+
+        for (var subcatalog_delete of subcatalog_deletes) {
+            subcatalog_delete.onclick = (e) => {
+                location.href = "/Admin/SubCatalog/Del/" + e.target.id.replace("subcatalog_delete_", "");
+            }
+        }
+
+        for (var subsubcatalog_delete of subsubcatalog_deletes) {
+            subsubcatalog_delete.onclick = (e) => {
+                location.href = "/Admin/SubSubCatalog/Del/" + e.target.id.replace("subsubcatalog_delete_", "");
+            }
+        }
+
+        create_catalog.onclick = () => {
+            location.href = "/Admin/Catalog/Create";
+        }
+
+        create_subcatalog.onclick = () => {
+            location.href = "/Admin/SubCatalog/Create";
+        }
+
+        create_subsubcatalog.onclick = () => {
+            location.href = "/Admin/SubSubCatalog/Create";
+        }
+    }
+</script>

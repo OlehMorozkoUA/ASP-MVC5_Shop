@@ -1,0 +1,364 @@
+﻿<style>
+    input[type=range] {
+        -webkit-appearance: none;
+        width: 100%;
+        margin: 13.8px 0;
+    }
+
+        input[type=range]:focus {
+            outline: none;
+        }
+
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 8.4px;
+            cursor: pointer;
+            box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+            background: #3071a9;
+            border-radius: 1.3px;
+            border: 0.2px solid #010101;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+            border: 1px solid #000000;
+            height: 36px;
+            width: 16px;
+            border-radius: 3px;
+            background: #ffffff;
+            cursor: pointer;
+            -webkit-appearance: none;
+            margin-top: -14px;
+        }
+
+        input[type=range]:focus::-webkit-slider-runnable-track {
+            background: #367ebd;
+        }
+
+        input[type=range]::-moz-range-track {
+            width: 100%;
+            height: 8.4px;
+            cursor: pointer;
+            box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+            background: #3071a9;
+            border-radius: 1.3px;
+            border: 0.2px solid #010101;
+        }
+
+        input[type=range]::-moz-range-thumb {
+            box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+            border: 1px solid #000000;
+            height: 36px;
+            width: 16px;
+            border-radius: 3px;
+            background: #ffffff;
+            cursor: pointer;
+        }
+
+        input[type=range]::-ms-track {
+            width: 100%;
+            height: 8.4px;
+            cursor: pointer;
+            background: transparent;
+            border-color: transparent;
+            color: transparent;
+        }
+
+        input[type=range]::-ms-fill-lower {
+            background: #2a6495;
+            border: 0.2px solid #010101;
+            border-radius: 2.6px;
+            box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+        }
+
+        input[type=range]::-ms-fill-upper {
+            background: #3071a9;
+            border: 0.2px solid #010101;
+            border-radius: 2.6px;
+            box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+        }
+
+        input[type=range]::-ms-thumb {
+            box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+            border: 1px solid #000000;
+            height: 36px;
+            width: 16px;
+            border-radius: 3px;
+            background: #ffffff;
+            cursor: pointer;
+            height: 8.4px;
+        }
+
+        input[type=range]:focus::-ms-fill-lower {
+            background: #3071a9;
+        }
+
+        input[type=range]:focus::-ms-fill-upper {
+            background: #367ebd;
+        }
+
+    .product-card {
+        background-color: white;
+        box-shadow: 0 0 10px rgba(0,0,0,0.8);
+    }
+</style>
+<link rel="stylesheet" href="~/Content/Range/multirange.css" />
+<script src="~/Content/Range/multirange.js"></script>
+<script src="~/Scripts/SliderRange/SliderRange.js"></script>
+
+
+<h2>@ViewBag.Title - @ViewBag.Products.Count</h2>
+@if (ViewBag.ProductFind != null)
+{
+    @ViewBag.ProductFind.Name
+    @ViewBag.ProductFind.CatalogId
+    @ViewBag.ProductFind.SubCatalogId
+    @ViewBag.ProductFind.SubSubCatalogId
+}
+<!--////////////////////////////////////////////---------Seach Panel----------//////////////////////////////////////////////////-->
+@using (Html.BeginForm("Find", "Product", FormMethod.Post, new { @class = "color-form", @style = "background-color:aquamarine; margin: 20px 0px; box-shadow: 0 0 25px rgba(0,0,0,0.8); padding: 10px;" }))
+{
+    <input name="CatalogId" type="hidden" value="@ViewBag.catalogId" />
+    <input name="otherId" type="hidden" value="@ViewBag.id" />
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-5">
+                <div class="form-group">
+                    <img id="imageSC" width="50" style="margin:5px;" />
+                    <label>Subcatalog</label>
+                    <select name="SubCatalogId" class="form-control" id="SubCatalogId"></select>
+                </div>
+                <div class="form-group">
+                    <label>Subsubcatalog</label>
+                    <select name="SubSubCatalogId" class="form-control" id="SubSubCatalogId"></select>
+                </div>
+            </div>
+            <div class="col-sm-5">
+                <div class="form-group">
+                    <label>Product Brand</label>
+                    @Html.TextBox("Brand", null, new { @class = "form-control", @placeholder = "Enter Brand" })
+                </div>
+                <div class="form-group">
+                    <label>Product Name</label>
+                    @Html.TextBox("Name", null, new { @class = "form-control", @placeholder = "Enter Model" })
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin:30px;">
+            <div class="col-lg-8">
+                <label>Price</label>
+                <br />
+                <div style="display:inline-block; padding-left:5px; padding-right:5px;">
+                    <label style="font-style:italic; margin-left:5px;">From</label>
+                    @Html.TextBox("PriceLow", null, new { @class = "form-control", @placeholder = "", @type = "number", @style = "inline-block; width: 80px;", @id = "From" })
+                </div>
+                <span>-</span>
+                <div style="display:inline-block; padding-left:3px; padding-right:3px;">
+                    <label style="font-style:italic; margin-left:5px;">To</label>
+                    @Html.TextBox("PriceHigh", null, new { @class = "form-control", @placeholder = "", @type = "number", @style = "inline-block; width: 80px;", @id = "To" })
+                </div>
+                <div id="div_range" style="margin:23px; margin-left:10px;">
+                    <input id="range" type="range" multiple value="0,100" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-1">
+                <input type="submit" value="submit" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+}
+<!--////////////////////////////////////////////---------Seach Panel----------//////////////////////////////////////////////////-->
+<!--////////////////////////////////////////////---------Product List----------//////////////////////////////////////////////////-->
+<div style="text-align:center; background-color:lightcyan; padding: 15px; box-shadow: 0 0 15px rgba(0,0,0,0.8);" id="productList">
+    @{
+        int id = ViewBag.id;
+        int catalogId = ViewBag.catalogId;
+        int lowerbound = 6 * id;
+        int upperbound;
+        if ((ViewBag.Products.Count - lowerbound - 1) < 6)
+        {
+            upperbound = ViewBag.Products.Count;
+        }
+        else
+        {
+            upperbound = lowerbound + 6;
+        }
+        if (ViewContext.RouteData.Values["action"].ToString() == "Find" && ViewContext.RouteData.Values["controller"].ToString() == "Product")
+        {
+            lowerbound = 0;
+            upperbound = ViewBag.Products.Count;
+        }
+    }
+    @for (int i = lowerbound; i < upperbound; i++)
+    {
+        <div class="product-card" style="width: 23rem; border: 1px solid gray; margin: 10px; display: inline-block; text-align:left;" data-toggle="modal" data-target="#ModalCenter_@i">
+            <img src="@ViewBag.Products[i].ImagePath" class="card-img-top" alt="..." style="width: 100%;">
+            <div class="card-body" style="padding: 5px;">
+                @*<h4 class="card-title" style="font-weight:bold;">@ViewBag.Products[i].SubCatalogId / @ViewBag.Products[i].SubSubCatalogId</h4>*@
+                <h4 class="card-title" style="font-weight:bold;">@ViewBag.Products[i].Brand</h4>
+                <h5 class="card-title" style="font-weight:bold;">@ViewBag.Products[i].Name</h5>
+                <p class="card-text">Description</p>
+                <div style="display:inline-block; padding:10px;">
+                    <h5 class="card-title" style="font-weight:bold; display:inline-block; font-size:30px; color:darkred;">@ViewBag.Products[i].Price</h5>
+                    <img src="~/Content/Images/bodyLayout/grn.png" style="display: inline-block; margin-bottom:14px;" height="20" />
+                </div>
+                <a href="#" class="btn btn-primary pull-right" style="margin:10px;">Buy</a>
+            </div>
+        </div>
+
+        <div class="modal fade" id="ModalCenter_@i" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        @*<h3 class="card-title" style="font-weight:bold;">@ViewBag.Catalogs[ViewBag.Products[i].CatalogId - 1].Name</h3>*@
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <img src="@ViewBag.Products[i].ImagePath" class="card-img-top" alt="..." style="width: 100%; border:1px solid black;">
+
+                        <h4 class="card-title" style="font-weight:bold;">@ViewBag.Products[i].Brand</h4>
+                        <h5 class="card-title" style="font-weight:bold;">@ViewBag.Products[i].Name</h5>
+                        <p class="card-text">@ViewBag.Products[i].Description</p>
+
+                    </div>
+                    <div class="pull-left" style="display:inline-block; padding:10px;">
+                        <h5 class="card-title" style="font-weight:bold; display:inline-block; font-size:30px; color:darkred;">@ViewBag.Products[i].Price</h5>
+                        <img src="~/Content/Images/bodyLayout/grn.png" style="display: inline-block; margin-bottom:14px;" height="20" />
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#" class="btn btn-primary pull-right" style="margin:10px;">Buy</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    @if (ViewContext.RouteData.Values["action"].ToString() == "Index" && ViewContext.RouteData.Values["controller"].ToString() == "Product")
+    {
+        <nav aria-label="...">
+            <ul class="pagination" style="box-shadow: 0 0 15px rgba(0,0,0,0.8);">
+                @{
+                    int paginationCount = ViewBag.Products.Count / 6 + 1;
+                    int paginationId = id / 5;
+                    int paginationLowerbound = 5 * paginationId;
+                    int paginationUpperbound;
+                    if ((paginationId + 1) * 30 > ViewBag.Products.Count)
+                    {
+                        paginationUpperbound = 5 * paginationId - ((paginationId + 1) * 30 - ViewBag.Products.Count) / 5 + 6;
+                    }
+                    else
+                    {
+                        paginationUpperbound = 5 * paginationId + 5;
+                    }
+                }
+                <li class="page-item @((id == 0) ? "disabled" : "")">
+                    @if (id == 0)
+                    {
+                        <a class="page-link" onclick="return false" style="font-weight:bold;"><</a>
+                    }
+                    else
+                    {
+                        <a class="page-link" href="/Product/Index/@catalogId/@(id - 1)#productList" style="font-weight:bold;"><</a>
+                    }
+                </li>
+                @for (int i = paginationLowerbound; i < paginationUpperbound; i++)
+                {
+                    <li class="page-item @((i == id) ? "active" : "")">
+                        <a class="page-link" href="/Product/Index/@catalogId/@i#productList">@(i + 1)</a>
+                    </li>
+                }
+                @if (((paginationId + 1) * 30) < ViewBag.Products.Count)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="/Product/Index/@catalogId/@(id + 5 - id % 5)#productList">...</a>
+                    </li>
+                }
+                <li class="page-item @((id == paginationCount - 1) ? "disabled" : "")">
+                    @if (id == paginationCount - 1)
+                    {
+                        <a class="page-link" onclick="return false" style="font-weight:bold;">></a>
+                    }
+                    else
+                    {
+                        <a class="page-link" href="/Product/Index/@catalogId/@(id + 1)#productList" style="font-weight:bold;">></a>
+                    }
+                </li>
+            </ul>
+        </nav>
+    }
+</div>
+<!--////////////////////////////////////////////---------Product List----------//////////////////////////////////////////////////-->
+<!--////////////////////////////////////////////---------SCRIPT----------//////////////////////////////////////////////////-->
+@using KvartsShop.Models;
+@using KvartsShop.Models.Context;
+@{
+    DataContext context = new DataContext();
+    IEnumerable<Catalog> catalogs = context.Catalogs;
+    IEnumerable<SubCatalog> subCatalogs = context.SubCatalogs;
+    IEnumerable<SubSubCatalog> subSubCatalogs = context.SubSubCatalogs;
+}
+<script>
+    window.onload = () => {
+        var range = document.getElementById("range");
+        var from = document.getElementById("From");
+        var to = document.getElementById("To");
+
+        from.value = range.valueLow * 0.01 * @ViewBag.Min;
+        to.value = range.valueHigh * 0.01 * @ViewBag.Max;
+
+        var div_range = document.getElementById("div_range");
+        div_range.onclick = () => {
+            from.value = Math.round(range.valueLow * 0.01 * @ViewBag.Max);
+            to.value = Math.round(range.valueHigh * 0.01 * @ViewBag.Max);
+        }
+
+        let catalogJson = @Html.Raw(Json.Encode(@catalogs));
+        let subcatalogJson =  @Html.Raw(Json.Encode(@subCatalogs));
+        let subsubcatalogJson =  @Html.Raw(Json.Encode(@subSubCatalogs));
+        let catalogId = @ViewBag.catalogId;
+
+        let SubCatalogId = document.getElementById("SubCatalogId");
+        let SubSubCatalogId = document.getElementById("SubSubCatalogId");
+        let imageSC = document.getElementById("imageSC");
+
+        CreateOptions(SubCatalogId, subcatalogJson, catalogId);
+        CreateOptionsWhere(SubSubCatalogId, subsubcatalogJson, SubCatalogId.value);
+        imageSC.src = subcatalogJson[SubCatalogId.value - 1].ImagePath;
+
+        function CreateOption(selectElement, optionElement) {
+            let option = document.createElement("option");
+            option.value = optionElement.Id;
+            option.innerHTML = optionElement.Name;
+
+            selectElement.appendChild(option);
+        }
+
+        function CreateOptions(selectElement, optionElements, id) {
+            for (var optionElement of optionElements) {
+                if (optionElement.CatalogId == id) {
+                    CreateOption(selectElement, optionElement);
+                }
+            }
+        }
+
+        function CreateOptionsWhere(selectElement, optionElements, id) {
+            for (var optionElement of optionElements) {
+                if (optionElement.SubCatalogId == id) {
+                    CreateOption(selectElement, optionElement);
+                }
+            }
+        }
+
+        SubCatalogId.onchange = (e) => {
+            while (SubSubCatalogId.firstChild) {
+                SubSubCatalogId.firstChild.remove();
+            }
+            CreateOptionsWhere(SubSubCatalogId, subsubcatalogJson, e.target.value);
+            imageSC.src = subcatalogJson[SubCatalogId.value - 1].ImagePath;
+        }
+    }
+</script>
+<!--////////////////////////////////////////////---------SCRIPT----------//////////////////////////////////////////////////-->

@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap Simple Login Form</title>
+    <link rel="stylesheet" href="~/Content/bootstrap.min.css" />
+    <script src="~/Scripts/jquery-3.3.1.slim.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="~/Areas/Admin/Content/css/styleLogIn.css" />
+</head>
+<body>
+    <div class="login-form">
+        @using (Html.BeginForm("Registration", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <h2 class="text-center">Registration</h2>
+            <div class="form-group">
+                <input id="fn" type="text" name="FirstName" class="form-control" placeholder="First Name" required="required">
+            </div>
+            <div class="form-group">
+                <input id="ln" type="text" name="LastName" class="form-control" placeholder="Last Name" required="required">
+            </div>
+            <div class="form-group">
+                <input id="em" type="email" name="Email" class="form-control" placeholder="Email" required="required">
+            </div>
+            <div class="form-group">
+                <input id="tel" type="tel" name="Phone" class="form-control" placeholder="Phone" required="required">
+            </div>
+            <div class="form-group">
+                <input id="password" type="password" name="Password" class="form-control" placeholder="Password" required="required">
+            </div>
+            <div class="form-group">
+                <input id="confirm_password" type="password" name="ConfimPassword" class="form-control" placeholder="Confim Password" required="required">
+            </div>
+            <div class="form-group">
+                <button id="submit" type="submit" class="btn btn-primary btn-block">Create an Account</button>
+            </div>
+        }
+        <p class="text-center"><a href="/Admin/Home">Sing in</a></p>
+    </div>
+    <script>
+        window.onload = () => {
+            let password = document.getElementById("password");
+            let confirm_password = document.getElementById("confirm_password");
+
+            password.onchange = validatePassword;
+            confirm_password.onkeyup = validatePassword;
+
+            function validatePassword() {
+                if (password.value != confirm_password.value) {
+                    confirm_password.setCustomValidity("Passwords Don't Match");
+                } else {
+                    confirm_password.setCustomValidity('');
+                }
+            }
+        }
+    </script>
+</body>
+</html>

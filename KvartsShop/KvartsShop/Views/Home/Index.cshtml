@@ -1,0 +1,236 @@
+﻿@using KvartsShop.Models.Context
+@using KvartsShop.Models
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<link rel="stylesheet" href="~/Content/Site.css" />
+<script src="~/Scripts/Slider.js"></script>
+
+<style>
+    #slider {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        background-color: rgba(185, 189, 190, 0.40);
+        margin-top: 20px;
+        padding: 20px;
+    }
+
+    .button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+    }
+
+    .btn-slider {
+        border: 3px solid white;
+        border-radius: 50%;
+        height: 30px;
+        width: 30px;
+        cursor: pointer;
+        background-color: black;
+        font-weight: bold;
+        font-size: 10px;
+        color: white;
+        outline: none;
+    }
+
+        .btn-slider:hover {
+            border: 5px solid white;
+            border-radius: 50%;
+            background: green;
+        }
+
+        .btn-slider:active {
+            border-radius: 50%;
+            border: 5px solid gray;
+        }
+
+    .image {
+        width: 400px;
+        display: flex;
+        justify-content: center;
+    }
+
+    #result {
+        position: relative;
+        cursor: pointer;
+    }
+
+    .product-slider {
+        cursor: pointer;
+        position: relative;
+    }
+
+    #slider {
+        margin: 10px;
+        box-shadow: 0 0 30px rgba(0,0,0,0.8);
+    }
+
+    .product-card {
+        background-color: white;
+        box-shadow: 0 0 10px rgba(0,0,0,0.8);
+    }
+</style>
+
+<div class="jumbotron">
+    <h1 class="shadow-brand">KVARTS</h1>
+    <p><a href="https://asp.net" class="btn btn-primary btn-lg">About more &raquo;</a></p>
+    <div class="col-md-3 text-center clock">
+        <div class="card pad">
+            <a><span class="badge hours">11</span></a> :
+            <a><span class="badge min">22</span></a> :
+            <a><span class="badge sec">35</span></a>
+        </div>
+    </div>
+</div>
+
+<div style="text-align:center; background-color:lightcyan; padding: 15px; box-shadow: 0 0 15px rgba(0,0,0,0.8);" id="productList">
+    @{
+        int id = ViewBag.id;
+        int lowerbound = 6 * id;
+        int upperbound;
+        if ((ViewBag.Products.Count - lowerbound - 1) < 6)
+        {
+            upperbound = ViewBag.Products.Count;
+        }
+        else
+        {
+            upperbound = lowerbound + 6;
+        }
+    }
+    @for (int i = lowerbound; i < upperbound; i++)
+    {
+        <!-- trigger modal -->
+        <div class="product-card" style="width: 23rem; border: 1px solid gray; margin: 10px; display: inline-block; text-align:left;" data-toggle="modal" data-target="#ModalCenter_@i">
+            <img src="@ViewBag.Products[i].ImagePath" class="card-img-top" alt="..." style="width: 100%;">
+            <div class="card-body" style="padding: 5px;">
+                @*<h4 class="card-title" style="font-weight:bold;">@ViewBag.Products[i].SubCatalogId / @ViewBag.Products[i].SubSubCatalogId</h4>*@
+                <h3 class="card-title" style="font-weight:bold;">@ViewBag.Catalogs[ViewBag.Products[i].CatalogId - 1].Name</h3>
+                <h4 class="card-title" style="font-weight:bold;">@ViewBag.Products[i].Brand</h4>
+                <h5 class="card-title" style="font-weight:bold;">@ViewBag.Products[i].Name</h5>
+                <p class="card-text">@ViewBag.Products[i].Description</p>
+                <div style="display:inline-block; padding:10px;">
+                    <h5 class="card-title" style="font-weight:bold; display:inline-block; font-size:30px; color:darkred;">@ViewBag.Products[i].Price</h5>
+                    <img src="~/Content/Images/bodyLayout/grn.png" style="display: inline-block; margin-bottom:14px;" height="20" />
+                </div>
+                <a href="#" class="btn btn-primary pull-right" style="margin:10px;">Buy</a>
+            </div>
+        </div>
+
+        <div class="modal fade" id="ModalCenter_@i" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="card-title" style="font-weight:bold;">@ViewBag.Catalogs[ViewBag.Products[i].CatalogId - 1].Name</h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <img src="@ViewBag.Products[i].ImagePath" class="card-img-top" alt="..." style="width: 100%; border:1px solid black;">
+
+                        <h4 class="card-title" style="font-weight:bold;">@ViewBag.Products[i].Brand</h4>
+                        <h5 class="card-title" style="font-weight:bold;">@ViewBag.Products[i].Name</h5>
+                        <p class="card-text">@ViewBag.Products[i].Description</p>
+
+                    </div>
+                    <div class="pull-left" style="display:inline-block; padding:10px;">
+                        <h5 class="card-title" style="font-weight:bold; display:inline-block; font-size:30px; color:darkred;">@ViewBag.Products[i].Price</h5>
+                        <img src="~/Content/Images/bodyLayout/grn.png" style="display: inline-block; margin-bottom:14px;" height="20" />
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#" class="btn btn-primary pull-right" style="margin:10px;">Buy</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <nav aria-label="...">
+        <ul class="pagination" style="box-shadow: 0 0 15px rgba(0,0,0,0.8);">
+            @{
+                int paginationCount = ViewBag.Products.Count / 6 + 1;
+                int paginationId = id / 5;
+                int paginationLowerbound = 5 * paginationId;
+                int paginationUpperbound;
+                if ((paginationId + 1) * 30 > ViewBag.Products.Count)
+                {
+                    paginationUpperbound = 5 * paginationId - ((paginationId + 1) * 30 - ViewBag.Products.Count) / 5 + 6;
+                }
+                else
+                {
+                    paginationUpperbound = 5 * paginationId + 5;
+                }
+            }
+            <li class="page-item @((id == 0) ? "disabled" : "")">
+                @if (id == 0)
+                {
+                    <a class="page-link" onclick="return false" style="font-weight:bold;"><</a>
+                }
+                else
+                {
+                    <a class="page-link" href="/Home/Index/@(id - 1)#productList" style="font-weight:bold;"><</a>
+                }
+            </li>
+            @for (int i = paginationLowerbound; i < paginationUpperbound; i++)
+            {
+                <li class="page-item @((i == id) ? "active" : "")">
+                    <a class="page-link" href="/Home/Index/@i#productList">@(i + 1)</a>
+                </li>
+            }
+            @if (((paginationId + 1) * 30) < ViewBag.Products.Count)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="/Home/Index/@(id + 5 - id%5)#productList">...</a>
+                </li>
+            }
+            <li class="page-item @((id == paginationCount - 1) ? "disabled" : "")">
+                @if (id == paginationCount - 1)
+                {
+                    <a class="page-link" onclick="return false" style="font-weight:bold;">></a>
+                }
+                else
+                {
+                    <a class="page-link" href="/Home/Index/@(id + 1)#productList" style="font-weight:bold;">></a>
+                }
+            </li>
+        </ul>
+    </nav>
+</div>
+
+<div id="slider">
+    <div class="button">
+        <button id="Prev" class="btn-slider"><</button>
+    </div>
+    <div id="slider-item">
+
+    </div>
+    <div class="button">
+        <button id="Next" class="btn-slider">></button>
+    </div>
+</div>
+
+
+<div id="products-slider">
+    @foreach (var product in ViewBag.ProductSliders)
+    {
+        <div class="product-slider"
+             style="width: 20rem; border: 1px solid gray; margin:30px; display: inline-block; background-color:white;">
+            <img src="@product.ImagePath" class="card-img-top" alt="..." style="width: 100%;">
+            <div class="card-body" style="padding: 5px;">
+                <h3 class="card-title" style="font-weight:bold;">@ViewBag.Catalogs[product.CatalogId - 1].Name</h3>
+                <h4 class="card-title" style="font-weight:bold;">@product.Brand</h4>
+                <h5 class="card-title" style="font-weight:bold;">@product.Name</h5>
+                <p class="card-text">@product.Description</p>
+                <div style="display:inline-block; padding:10px;">
+                    <h5 class="card-title" style="font-weight:bold; display:inline-block; font-size:30px; color:darkred;">@product.Price</h5>
+                    <img src="~/Content/Images/bodyLayout/grn.png" style="display: inline-block; margin-bottom:14px;" height="20" />
+                </div>
+                <a href="#" class="btn btn-primary pull-right" style="margin:10px;">Buy</a>
+            </div>
+        </div>
+    }
+</div>

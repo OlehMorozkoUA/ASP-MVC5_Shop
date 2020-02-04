@@ -1,0 +1,90 @@
+﻿@model KvartsShop.Models.SubSubCatalog
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+
+@using (Html.BeginForm("Create", "SubSubCatalog", FormMethod.Post, new { enctype = "multipart/form-data" })) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>SubSubCatalog</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="file" class="control-label col-md-2" style="margin-right:10px;">Image</label>
+            <input type="file" class="form-control-file" name="File" id="File" style="margin-left:10px;">
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CatalogId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <select id="CatalogId" name="CatalogId" class="form-control"></select>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SubCatalogId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <select id="SubCatalogId" name="SubCatalogId" class="form-control"></select>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+<script>
+    let subcatalogJson =  @Html.Raw(Json.Encode(@ViewBag.SubCatalogs));
+    let catalogJson =  @Html.Raw(Json.Encode(@ViewBag.Catalogs));
+
+    let CatalogId = document.getElementById("CatalogId");
+    let SubCatalogId = document.getElementById("SubCatalogId");
+
+    CreateOptions(CatalogId, catalogJson);
+    CreateOptionsWhere(SubCatalogId, subcatalogJson, CatalogId.value);
+
+    function CreateOption(selectElement, optionElement) {
+        let option = document.createElement("option");
+        option.value = optionElement.Id;
+        option.innerHTML = optionElement.Name;
+
+        selectElement.appendChild(option);
+    }
+
+    function CreateOptions(selectElement, optionElements) {
+        for (var optionElement of optionElements) {
+            CreateOption(selectElement, optionElement);
+        }
+    }
+
+    function CreateOptionsWhere(selectElement, optionElements, id) {
+        for (var optionElement of optionElements) {
+            if (optionElement.CatalogId == id) {
+                CreateOption(selectElement, optionElement);
+            }
+        }
+    }
+
+    CatalogId.onchange = (e) => {
+        while (SubCatalogId.firstChild) {
+            SubCatalogId.firstChild.remove();
+        }
+        CreateOptionsWhere(SubCatalogId, subcatalogJson, e.target.value);
+    }
+</script>
